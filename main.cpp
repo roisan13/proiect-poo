@@ -198,7 +198,7 @@ public:
         window.setVerticalSyncEnabled(true);
 
         unsigned int gameState;
-        fontAr.loadFromFile("arial.ttf");
+        fontAr.loadFromFile("sprites/arial.ttf");
 
         textHP1.setFont(fontAr);
         textHP2.setFont(fontAr);
@@ -210,8 +210,8 @@ public:
         voievod1.updateHPText(textHP1);
         voievod2.updateHPText(textHP2);
 
-        textureV1.loadFromFile("MichaelTheBrave.png");
-        textureV2.loadFromFile("VladTheImpaler.png");
+        textureV1.loadFromFile("sprites/MichaelTheBrave.png");
+        textureV2.loadFromFile("sprites/VladTheImpaler.png");
 
         spriteV1.setTexture(textureV1);
 
