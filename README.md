@@ -1,4 +1,5 @@
-# Nu primesc notă pentru că nu am pus titlu și descriere
+# Voievozi si Domnitori
+Un simplu joc turn-based cu voievozi si domnitori precum Mihai Viteazul, Vlad Tepes sau Stefan cel Mare. Ideea este sa fac o replica la Hearthstone, dar mult mai simplu.
 
 ### Important!
 Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar în folder-ul `generated`.
