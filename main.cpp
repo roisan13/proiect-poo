@@ -17,6 +17,7 @@
 
 //////////////////////////////////////////////////////////////////////
 /// This class is used to test that the memory leak checks work as expected even when using a GUI
+/*
 class SomeClass {
 public:
     explicit SomeClass(int) {}
@@ -25,6 +26,7 @@ public:
 SomeClass *getC() {
     return new SomeClass{2};
 }
+ */
 //////////////////////////////////////////////////////////////////////
 
 class Voievod;
@@ -36,6 +38,7 @@ private:
 
 public:
     Button()= default;
+
     Button(const std::string& t, sf::Font &font, sf::Vector2f size, sf::Color bgColor){
 
         text.setString(t);
@@ -46,7 +49,10 @@ public:
         button.setFillColor(bgColor);
     }
 
-
+    friend std::ostream &operator<<(std::ostream &os, const Button &button_) {
+        os << "text: " << std::string(button_.text.getString());
+        return os;
+    }
 
     void setBackColor(sf::Color color_){
         button.setFillColor(color_);
@@ -88,6 +94,7 @@ public:
 
         return (mouseX < btnRightMargin && mouseX > btnPosX && mouseY < btnDownMargin && mouseY > btnPosY);
     }
+
 };
 class Spell{
 private:
@@ -194,7 +201,7 @@ private:
 
 
 public:
-    void createWindow(){
+    void start(){
         sf::RenderWindow window(sf::VideoMode(1280, 900), "Voievozi si Domnitori");
         sf::Event ev{};
         sf::Font fontAr;
@@ -422,9 +429,13 @@ int main() {
     init_threads();                                                       //
     ////////////////////////////////////////////////////////////////////////
 
+    /*
+
     SomeClass *c = getC();
     std::cout << c << "\n";
     delete c;
+
+    */
 
 
     Spell basicAttack = Spell("Basic Attack", 5, 30, 85);
@@ -445,7 +456,7 @@ int main() {
 
     Game game = Game(v1, v2);
 
-    game.createWindow();
+    game.start();
     //game.play();
 
     /*
