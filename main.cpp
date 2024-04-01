@@ -102,29 +102,32 @@ public:
                                                                              hitChance(hitChance) {}
 
 
-    virtual ~Spell() = default;
+    virtual ~Spell(){
+        std::cout << "Spell destroyed";
+    }
 
-    [[nodiscard]] int evalDamage() const{
+    [[nodiscard]] int evalDamage(std::string &alertString) const{
         if ( effolkronium::random_static::get(1, 100) > hitChance) {
             std::cout << "Miss!";
+            alertString = "Miss!";
             return 0;
 
         }
 
-        if ( effolkronium::random_static::get(1, 100) > critChance)
+        if ( effolkronium::random_static::get(1, 100) > critChance) {
+            alertString = "Hit!";
             return baseDamage;
+        }
         else {
             std::cout << "Critical strike! \n";
+            alertString = "Critical Strike!";
             return 2 * baseDamage;
         }
     }
 
 
     friend std::ostream &operator<<(std::ostream &os, const Spell &spell) {
-        os << spell.name;
-
-        // Default os
-        // os << "name: " << spell.name << " baseDamage: " << spell.baseDamage << " critChance: " << spell.critChance << '\n';
+        os << "name: " << spell.name << " baseDamage: " << spell.baseDamage << " critChance: " << spell.critChance << '\n';
         return os;
     }
 
@@ -147,7 +150,9 @@ public:
                                                                                                               healthPoints_),
                                                                                                       spells(spells_) {}
 
-    virtual ~Voievod() = default;
+    virtual ~Voievod(){
+        std::cout << "Voievod destroyed";
+    }
 
 
     Voievod& operator=(const Voievod&) = default;
@@ -159,10 +164,12 @@ public:
         return os;
     };
 
+    /*
     void printSpells(){
         for (unsigned int i = 0; i < spells.size(); ++i)
             std::cout << i + 1 << ". " << spells[i] << '\n';
     }
+     */
 
     [[nodiscard]] bool isAlive() const{
         return (healthPoints > 0);
@@ -172,9 +179,9 @@ public:
 
     }
 
-    void useSpell(unsigned int spellIndex, Voievod& enemy){
+    void useSpell(unsigned int spellIndex, Voievod& enemy, std::string &alertString){
         if ( spellIndex < spells.size() )
-            enemy.healthPoints -= spells[spellIndex].evalDamage();
+            enemy.healthPoints -= spells[spellIndex].evalDamage(alertString);
         else std::cout << "It didn't work: Wrong spellIndex provided!\n";
     }
 };
@@ -198,30 +205,42 @@ public:
         window.setVerticalSyncEnabled(true);
 
         unsigned int gameState;
+        // alpha for the alert text
+        int clrAlpha = 0;
+        bool alertTextShowing;
+
         fontAr.loadFromFile("sprites/arial.ttf");
+
+
+        // Text for voievod1 and voievod2 HEALTH POINTS
 
         textHP1.setFont(fontAr);
         textHP2.setFont(fontAr);
         textHP1.setCharacterSize(72);
-        // textHP1.setFillColor(sf::Color::Red);
         textHP2.setCharacterSize(72);
         textHP1.setPosition({600.f,350.f});
         textHP2.setPosition({600.f,800.f});
         voievod1.updateHPText(textHP1);
         voievod2.updateHPText(textHP2);
 
+
+        // Load the textures for the background
+
         textureV1.loadFromFile("sprites/MichaelTheBrave.png");
         textureV2.loadFromFile("sprites/VladTheImpaler.png");
-
         spriteV1.setTexture(textureV1);
-
         spriteV2.setTexture(textureV2);
         spriteV2.setPosition(0, 450);
 
+
+        // Alert text
+
         alertText.setFont(fontAr);
         alertText.setCharacterSize(60);
-        alertText.setPosition({800.f, 350.f});
-        alertText.setString("Critical strike!");
+        alertText.setFillColor(sf::Color::Red);
+        alertText.setString("Alert TEXT!");
+        std::string alertString;
+
 
         // Buttons for voievod1
 
@@ -232,6 +251,7 @@ public:
         btn2V1.setPosition({20.f, 100.f});
         btn3V1.setPosition({20.f, 175.f});
         std::vector<Button> v1buttons = {btn1V1,btn2V1,btn3V1};
+
 
         // Buttons for voievod2
 
@@ -244,6 +264,7 @@ public:
         std::vector<Button> v2buttons = {btn1V2,btn2V2,btn3V2};
 
         gameState = 1;
+        alertTextShowing = false;
         while (window.isOpen())
         {
             //Event polling
@@ -280,8 +301,11 @@ public:
                                 if (v1buttons[i].isHovered(window)) {
                                     /// CHECK IF IT IS CORRECT ROUND!!!
                                     /// PLAY AUDIO!!!!
-                                    voievod1.useSpell(i, voievod2);
+                                    voievod1.useSpell(i, voievod2, alertString);
                                     voievod2.updateHPText(textHP2);
+
+                                    alertTextShowing = true;
+                                    alertText.setString(alertString);
                                     gameState = 2;
                                 }
                         }
@@ -290,8 +314,11 @@ public:
                                 if (v2buttons[i].isHovered(window)) {
                                     /// CHECK IF IT IS CORRECT ROUND!!!
                                     /// PLAY AUDIO!!!!
-                                    voievod2.useSpell(i, voievod1);
+                                    voievod2.useSpell(i, voievod1, alertString);
                                     voievod1.updateHPText(textHP1);
+
+                                    alertTextShowing = true;
+                                    alertText.setString(alertString);
                                     gameState = 1;
                                 }
                         }
@@ -305,14 +332,24 @@ public:
             //Render
             window.clear(sf::Color::Black); //Clear old frame
 
-            // alertText.move(0.f, -1.f);
-            // alertText.setFillColor(sf::Color(0, 255, 0, alpha));
+            if (alertTextShowing){
+                clrAlpha = 255;
+                alertTextShowing = false;
+                alertText.setPosition({800.f, 450.f});
+            }
+
+            if (clrAlpha > 0) {
+                alertText.setFillColor(sf::Color(255, 0, 0, clrAlpha));
+                clrAlpha -= 2;
+                alertText.move(0.f, -1.f);
+            }
 
             window.draw(spriteV1);
             window.draw(spriteV2);
             window.draw(textHP1);
             window.draw(textHP2);
-            // window.draw(alertText);
+            if (clrAlpha > 0)
+                window.draw(alertText);
 
 
 
@@ -337,6 +374,11 @@ public:
         else std::cout <<"It's a tie!\n";
     }
 
+    /*
+
+     ///
+     ///    OLD CONSOLE IMPLEMENTATION
+     ///
 
     void play(){
         std::cout << "The game has started! \n";
@@ -349,7 +391,7 @@ public:
             int *spellIndex_ = new int;
             std::cin >> *spellIndex_;
             // aici ar trebui un if in care sa se citeasca frumos spellIndex, fara erori
-            voievod1.useSpell(*spellIndex_-1, voievod2);
+            voievod1.useSpell(*spellIndex_-1, voievod2,);
             std::cout << "It worked! " << voievod2;
 
             std::cout << "Voievod2, choose your spell:\n";
@@ -364,8 +406,7 @@ public:
         }
 
     };
-
-
+     */
 
     Game(const Voievod &voievod1, const Voievod &voievod2) : voievod1(voievod1), voievod2(voievod2) {}
 
@@ -405,7 +446,7 @@ int main() {
     Game game = Game(v1, v2);
 
     game.createWindow();
-    game.play();
+    //game.play();
 
     /*
     sf::RenderWindow window;
