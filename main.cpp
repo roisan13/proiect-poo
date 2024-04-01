@@ -109,6 +109,15 @@ public:
                                                                              hitChance(hitChance) {}
 
 
+    Spell &operator=(const Spell &other) {
+        name = other.name;
+        baseDamage = other.baseDamage;
+        critChance = other.critChance;
+        hitChance = other.hitChance;
+        std::cout << "operator= copiere Student\n";
+        return *this;
+    }
+
     virtual ~Spell(){
         std::cout << "Spell destroyed";
     }
@@ -162,7 +171,17 @@ public:
     }
 
 
-    Voievod& operator=(const Voievod&) = default;
+    // Voievod& operator=(const Voievod&) = default;
+
+
+    Voievod &operator=(const Voievod &other) {
+        name = other.name;
+        strength = other.strength;
+        healthPoints = other.healthPoints;
+        spells = other.spells;
+        std::cout << "operator= copiere Student\n";
+        return *this;
+    }
 
 
 
@@ -201,6 +220,13 @@ private:
 
 
 public:
+
+    Game &operator=(const Game &other) {
+        voievod1 = other.voievod1;
+        voievod2 = other.voievod2;
+        return *this;
+    }
+
     void start(){
         sf::RenderWindow window(sf::VideoMode(1280, 900), "Voievozi si Domnitori");
         sf::Event ev{};
