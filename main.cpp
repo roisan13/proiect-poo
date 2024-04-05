@@ -15,22 +15,6 @@
 //////////////////////////////////////////////////////////////////////
 
 
-//////////////////////////////////////////////////////////////////////
-/// This class is used to test that the memory leak checks work as expected even when using a GUI
-/*
-class SomeClass {
-public:
-    explicit SomeClass(int) {}
-};
-
-SomeClass *getC() {
-    return new SomeClass{2};
-}
- */
-//////////////////////////////////////////////////////////////////////
-
-class Voievod;
-
 class Button{
 private:
     sf::RectangleShape button;
@@ -96,6 +80,11 @@ public:
     }
 
 };
+
+class Voievod;
+
+
+// pt clasa SPELL am constructor de copiere, operator=
 class Spell{
 private:
     std::string name;
@@ -108,8 +97,22 @@ public:
                                                                              critChance(critChance),
                                                                              hitChance(hitChance) {}
 
+    Spell(const Spell &other) : name(other.name), baseDamage(other.baseDamage), critChance(other.critChance),
+                                hitChance(other.hitChance) {
+        std::cout << "Constr copiere Spell\n";
+    }
 
-    Spell &operator=(const Spell &other) = default;
+    Spell &operator=(const Spell &other) {
+        name = other.name;
+        baseDamage = other.baseDamage;
+        critChance = other.critChance;
+        hitChance = other.hitChance;
+        std::cout << "operator= copiere Spell\n";
+        return *this;
+    }
+
+
+    //Spell &operator=(const Spell &other) = default;
 
     virtual ~Spell(){
         std::cout << "Spell destroyed";
@@ -197,182 +200,197 @@ public:
 class Game{
 private:
     Voievod voievod1, voievod2;
+
     sf::Sprite spriteV1, spriteV2;
     sf::Texture textureV1, textureV2;
+    sf::Font fontAr;
+    sf::Text textHP1, textHP2;
+    sf::Text alertText;
+    Button btn1V1, btn2V1, btn3V1, btn1V2, btn2V2, btn3V2;
+    std::vector<Button> v1buttons, v2buttons;
+    unsigned int gameState;
+    int clrAlpha;
+    bool alertTextShowing;
+    std::string alertString;
 
 
 public:
 
-    Game(const Voievod &voievod1, const Voievod &voievod2) : voievod1(voievod1), voievod2(voievod2) {}
+    Game(const Voievod &voievod1, const Voievod &voievod2) : voievod1(voievod1), voievod2(voievod2) {
+        gameState = 1;
+        clrAlpha = 0;
+        alertTextShowing = false;
+    }
 
     virtual ~Game() {
         std::cout << "\nGame over! \n";
     }
 
-
-    void start(){
-        sf::RenderWindow window(sf::VideoMode(1280, 900), "Voievozi si Domnitori");
-        sf::Event ev{};
-        sf::Font fontAr;
-        sf::Text textHP1, textHP2;
-        sf::Text alertText;
-
-        /// Do NOT burn the GPU.
-        window.setVerticalSyncEnabled(true);
-
-        unsigned int gameState;
-        // alpha for the alert text
-        int clrAlpha = 0;
-        bool alertTextShowing;
-
-        fontAr.loadFromFile("sprites/arial.ttf");
-
-
-        // Text for voievod1 and voievod2 HEALTH POINTS
-
+    void init_voievodtextHP() {
         textHP1.setFont(fontAr);
         textHP2.setFont(fontAr);
         textHP1.setCharacterSize(72);
         textHP2.setCharacterSize(72);
-        textHP1.setPosition({600.f,350.f});
-        textHP2.setPosition({600.f,800.f});
+        textHP1.setPosition({600.f, 350.f});
+        textHP2.setPosition({600.f, 800.f});
         voievod1.updateHPText(textHP1);
         voievod2.updateHPText(textHP2);
+    };
 
-
+    void init_sprites() {
         // Load the textures for the background
-
         textureV1.loadFromFile("sprites/MichaelTheBrave.png");
         textureV2.loadFromFile("sprites/VladTheImpaler.png");
         spriteV1.setTexture(textureV1);
         spriteV2.setTexture(textureV2);
         spriteV2.setPosition(0, 450);
 
+        fontAr.loadFromFile("sprites/arial.ttf");
+    }
 
-        // Alert text
-
+    void init_alertText() {
         alertText.setFont(fontAr);
         alertText.setCharacterSize(60);
         alertText.setFillColor(sf::Color::Red);
         alertText.setString("Alert TEXT!");
-        std::string alertString;
+    }
 
+    void init_voievodButtons() {
 
         // Buttons for voievod1
-
-        Button btn1V1("Basic Attack",fontAr, {400, 50}, sf::Color::Black);
-        Button btn2V1("Powerful Attack",fontAr,{400, 50}, sf::Color::Black);
-        Button btn3V1("Battle of Calugareni",fontAr, {400, 50}, sf::Color::Black);
+        btn1V1 = Button("Basic Attack", fontAr, {400, 50}, sf::Color::Black);
+        btn2V1 = Button("Powerful Attack", fontAr, {400, 50}, sf::Color::Black);
+        btn3V1 = Button("Battle of Calugareni", fontAr, {400, 50}, sf::Color::Black);
         btn1V1.setPosition({20.f,25.f});
         btn2V1.setPosition({20.f, 100.f});
         btn3V1.setPosition({20.f, 175.f});
-        std::vector<Button> v1buttons = {btn1V1,btn2V1,btn3V1};
+        v1buttons = {btn1V1, btn2V1, btn3V1};
 
 
         // Buttons for voievod2
-
-        Button btn1V2("Basic Attack",fontAr, {400, 50}, sf::Color::Black);
-        Button btn2V2("Powerful Attack",fontAr,{400, 50}, sf::Color::Black);
-        Button btn3V2("Night Attack at Targoviste",fontAr, {400, 50}, sf::Color::Black);
+        btn1V2 = Button("Basic Attack", fontAr, {400, 50}, sf::Color::Black);
+        btn2V2 = Button("Powerful Attack", fontAr, {400, 50}, sf::Color::Black);
+        btn3V2 = Button("Night Attack at Targoviste", fontAr, {400, 50}, sf::Color::Black);
         btn1V2.setPosition({20.f,450.f+25.f});
         btn2V2.setPosition({20.f, 450.f+100.f});
         btn3V2.setPosition({20.f, 450.f+175.f});
-        std::vector<Button> v2buttons = {btn1V2,btn2V2,btn3V2};
+        v2buttons = {btn1V2, btn2V2, btn3V2};
+    }
 
-        gameState = 1;
-        alertTextShowing = false;
-        while (window.isOpen())
-        {
-            //Event polling
-            while (window.pollEvent(ev)){
+    void checkMouseButtonPressed(sf::RenderWindow &window) {
+        if (gameState == 1) {
+            for (unsigned int i = 0; i < v1buttons.size(); ++i)
+                if (v1buttons[i].isHovered(window)) {
+                    /// CHECK IF IT IS CORRECT ROUND!!!
+                    /// PLAY AUDIO!!!!
+                    voievod1.useSpell(i, voievod2, alertString);
+                    voievod2.updateHPText(textHP2);
 
-                switch (ev.type){
-                    case sf::Event::Closed:
-                        window.close();
-                        break;
-                    case sf::Event::KeyPressed:
-                        if (ev.key.code == sf::Keyboard::Escape)
-                            window.close();
-                        break;
-                    case sf::Event::MouseMoved:
-                        for (auto & v1button: v1buttons)
-                            if (v1button.isHovered(window)){
-                                v1button.setBackColor(sf::Color::Red);
-                            }
-                            else{
-                                v1button.setBackColor(sf::Color::Black);
-                            }
-                        for (auto & v2button: v2buttons)
-                            if (v2button.isHovered(window)){
-                                v2button.setBackColor(sf::Color::Red);
-                            }
-                            else{
-                                v2button.setBackColor(sf::Color::Black);
-                            }
-                        break;
-                    case sf::Event::MouseButtonPressed:
-                        std::cout << " Buton mouse apasat\n";
-                        if (gameState == 1) {
-                            for (unsigned int i = 0; i < v1buttons.size(); ++i)
-                                if (v1buttons[i].isHovered(window)) {
-                                    /// CHECK IF IT IS CORRECT ROUND!!!
-                                    /// PLAY AUDIO!!!!
-                                    voievod1.useSpell(i, voievod2, alertString);
-                                    voievod2.updateHPText(textHP2);
-
-                                    alertTextShowing = true;
-                                    alertText.setString(alertString);
-                                    gameState = 2;
-                                }
-                        }
-                        else if (gameState == 2) {
-                            for (unsigned int i = 0; i < v2buttons.size(); ++i)
-                                if (v2buttons[i].isHovered(window)) {
-                                    /// CHECK IF IT IS CORRECT ROUND!!!
-                                    /// PLAY AUDIO!!!!
-                                    voievod2.useSpell(i, voievod1, alertString);
-                                    voievod1.updateHPText(textHP1);
-
-                                    alertTextShowing = true;
-                                    alertText.setString(alertString);
-                                    gameState = 1;
-                                }
-                        }
-                    default:
-                        break;
+                    alertTextShowing = true;
+                    alertText.setString(alertString);
+                    gameState = 2;
                 }
-            }
+        } else if (gameState == 2) {
+            for (unsigned int i = 0; i < v2buttons.size(); ++i)
+                if (v2buttons[i].isHovered(window)) {
+                    /// CHECK IF IT IS CORRECT ROUND!!!
+                    /// PLAY AUDIO!!!!
+                    voievod2.useSpell(i, voievod1, alertString);
+                    voievod1.updateHPText(textHP1);
 
-            //Update
+                    alertTextShowing = true;
+                    alertText.setString(alertString);
+                    gameState = 1;
+                }
+        }
+    }
+
+    void event_polling(sf::RenderWindow &window) {
+        sf::Event ev{};
+
+        //Event polling
+        while (window.pollEvent(ev)) {
+
+            switch (ev.type) {
+                case sf::Event::Closed:
+                    window.close();
+                    break;
+                case sf::Event::KeyPressed:
+                    if (ev.key.code == sf::Keyboard::Escape)
+                        window.close();
+                    break;
+                case sf::Event::MouseMoved:
+                    for (auto &v1button: v1buttons)
+                        if (v1button.isHovered(window)) {
+                            v1button.setBackColor(sf::Color::Red);
+                        } else {
+                            v1button.setBackColor(sf::Color::Black);
+                        }
+                    for (auto &v2button: v2buttons)
+                        if (v2button.isHovered(window)) {
+                            v2button.setBackColor(sf::Color::Red);
+                        } else {
+                            v2button.setBackColor(sf::Color::Black);
+                        }
+                    break;
+                case sf::Event::MouseButtonPressed:
+                    std::cout << " Buton mouse apasat\n";
+                    checkMouseButtonPressed(window);
+
+
+                default:
+                    break;
+            }
+        }
+
+    }
+
+    void renderGame(sf::RenderWindow &window) {
+
+        window.clear(sf::Color::Black); //Clear old frame
+
+        if (alertTextShowing) {
+            clrAlpha = 255;
+            alertTextShowing = false;
+            alertText.setPosition({800.f, 450.f});
+        }
+
+        if (clrAlpha > 0) {
+            alertText.setFillColor(sf::Color(255, 0, 0, clrAlpha));
+            clrAlpha -= 2;
+            alertText.move(0.f, -1.f);
+        }
+
+        window.draw(spriteV1);
+        window.draw(spriteV2);
+        window.draw(textHP1);
+        window.draw(textHP2);
+        if (clrAlpha > 0)
+            window.draw(alertText);
+
+        for (auto &button: v1buttons)
+            button.drawTo(window);
+        for (auto &button: v2buttons)
+            button.drawTo(window);
+    }
+
+
+    void play() {
+        sf::RenderWindow window(sf::VideoMode(1280, 900), "Voievozi si Domnitori");
+
+        /// Do NOT burn the GPU.
+        window.setVerticalSyncEnabled(true);
+
+        init_sprites();
+        init_voievodtextHP();
+        init_alertText();
+        init_voievodButtons();
+
+        while (window.isOpen()) {
+            event_polling(window);
 
             //Render
-            window.clear(sf::Color::Black); //Clear old frame
-
-            if (alertTextShowing){
-                clrAlpha = 255;
-                alertTextShowing = false;
-                alertText.setPosition({800.f, 450.f});
-            }
-
-            if (clrAlpha > 0) {
-                alertText.setFillColor(sf::Color(255, 0, 0, clrAlpha));
-                clrAlpha -= 2;
-                alertText.move(0.f, -1.f);
-            }
-
-            window.draw(spriteV1);
-            window.draw(spriteV2);
-            window.draw(textHP1);
-            window.draw(textHP2);
-            if (clrAlpha > 0)
-                window.draw(alertText);
-
-
-
-            for (auto & button: v1buttons)
-                button.drawTo(window);
-            for (auto & button: v2buttons)
-                button.drawTo(window);
+            renderGame(window);
 
             //Draw your game
             window.display(); //Tell app that window is done drawing
@@ -459,54 +477,9 @@ int main() {
 
     Game game = Game(v1, v2);
 
-    game.start();
+    game.play();
     //game.play();
 
-    /*
-    sf::RenderWindow window;
-    ///////////////////////////////////////////////////////////////////////////
-    /// NOTE: sync with env variable APP_WINDOW from .github/workflows/cmake.yml:31
-    window.create(sf::VideoMode({800, 700}), "My Window", sf::Style::Default);
-    ///////////////////////////////////////////////////////////////////////////
-    //
-    ///////////////////////////////////////////////////////////////////////////
-    /// NOTE: mandatory use one of vsync or FPS limit (not both)            ///
-    /// This is needed so we do not burn the GPU                            ///
-    window.setVerticalSyncEnabled(true);                            ///
-    /// window.setFramerateLimit(60);                                       ///
-    ///////////////////////////////////////////////////////////////////////////
 
-    while(window.isOpen()) {
-        bool shouldExit = false;
-        sf::Event e{};
-        while(window.pollEvent(e)) {
-            switch(e.type) {
-            case sf::Event::Closed:
-                window.close();
-                break;
-            case sf::Event::Resized:
-                std::cout << "New width: " << window.getSize().x << '\n'
-                          << "New height: " << window.getSize().y << '\n';
-                break;
-            case sf::Event::KeyPressed:
-                std::cout << "Received key " << (e.key.code == sf::Keyboard::X ? "X" : "(other)") << "\n";
-                if(e.key.code == sf::Keyboard::Escape)
-                    shouldExit = true;
-                break;
-            default:
-                break;
-            }
-        }
-        if(shouldExit) {
-            window.close();
-            break;
-        }
-        using namespace std::chrono_literals;
-        std::this_thread::sleep_for(300ms);
-
-        window.clear();
-        window.display();
-    }
-     */
     return 0;
 }
