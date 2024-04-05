@@ -1,5 +1,5 @@
-# Voievozi si Domnitori
-Un simplu joc turn-based cu voievozi si domnitori precum Mihai Viteazul, Vlad Tepes sau Stefan cel Mare. Ideea este sa fac o replica la Hearthstone, dar mult mai simplu.
+# Lupta Voievozilor
+Un simplu joc turn-based cu voievozi si domnitori precum Mihai Viteazul, Vlad Tepes sau Stefan cel Mare. Ideea de la care am plecat era sa realizez o replica la Hearthstone, dar mult mai simplu. Urmeaza de implementat (pentru tema3, hopefully) un sistem de PvP (cel actual) si PvE (joaca impotriva computer-ului), precum si optiunea de a alege Voievodul cu care vrei sa joci.
 
 ### Important!
 Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar în folder-ul `generated`.
