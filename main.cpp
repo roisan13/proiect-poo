@@ -81,8 +81,6 @@ public:
 
 };
 
-class Voievod;
-
 
 // pt clasa SPELL am constructor de copiere, operator=
 class Spell{
@@ -213,19 +211,6 @@ private:
     bool alertTextShowing;
     std::string alertString;
 
-
-public:
-
-    Game(const Voievod &voievod1, const Voievod &voievod2) : voievod1(voievod1), voievod2(voievod2) {
-        gameState = 1;
-        clrAlpha = 0;
-        alertTextShowing = false;
-    }
-
-    virtual ~Game() {
-        std::cout << "\nGame over! \n";
-    }
-
     void init_voievodtextHP() {
         textHP1.setFont(fontAr);
         textHP2.setFont(fontAr);
@@ -271,39 +256,52 @@ public:
         btn1V2 = Button("Basic Attack", fontAr, {400, 50}, sf::Color::Black);
         btn2V2 = Button("Powerful Attack", fontAr, {400, 50}, sf::Color::Black);
         btn3V2 = Button("Night Attack at Targoviste", fontAr, {400, 50}, sf::Color::Black);
+
+        // de schimbat numerele astea magice la un moment dat!
         btn1V2.setPosition({20.f,450.f+25.f});
         btn2V2.setPosition({20.f, 450.f+100.f});
         btn3V2.setPosition({20.f, 450.f+175.f});
         v2buttons = {btn1V2, btn2V2, btn3V2};
     }
 
+
+public:
+
+    Game(const Voievod &voievod1, const Voievod &voievod2) : voievod1(voievod1), voievod2(voievod2), gameState(1),
+                                                             clrAlpha(0), alertTextShowing(false) {}
+
+    ~Game() {
+        std::cout << "\n Game destructor \n";
+    }
+
+    void mouseAction(sf::RenderWindow &window, std::vector<Button> buttons, Voievod &voievod, Voievod &voievodAtacat,
+                     sf::Text &textHPvoievodAtacat) {
+        for (unsigned int i = 0; i < buttons.size(); ++i)
+            if (buttons[i].isHovered(window)) {
+                /// CHECK IF IT IS CORRECT ROUND!!!
+                /// PLAY AUDIO!!!!
+                voievod.useSpell(i, voievodAtacat, alertString);
+                voievodAtacat.updateHPText(textHPvoievodAtacat);
+
+                alertTextShowing = true;
+                alertText.setString(alertString);
+                if (gameState == 1)
+                    gameState = 2;
+                else if (gameState == 2)
+                    gameState = 1;
+            }
+    }
+
     void checkMouseButtonPressed(sf::RenderWindow &window) {
         if (gameState == 1) {
-            for (unsigned int i = 0; i < v1buttons.size(); ++i)
-                if (v1buttons[i].isHovered(window)) {
-                    /// CHECK IF IT IS CORRECT ROUND!!!
-                    /// PLAY AUDIO!!!!
-                    voievod1.useSpell(i, voievod2, alertString);
-                    voievod2.updateHPText(textHP2);
+            mouseAction(window, v1buttons, voievod1, voievod2, textHP2);
 
-                    alertTextShowing = true;
-                    alertText.setString(alertString);
-                    gameState = 2;
-                }
         } else if (gameState == 2) {
-            for (unsigned int i = 0; i < v2buttons.size(); ++i)
-                if (v2buttons[i].isHovered(window)) {
-                    /// CHECK IF IT IS CORRECT ROUND!!!
-                    /// PLAY AUDIO!!!!
-                    voievod2.useSpell(i, voievod1, alertString);
-                    voievod1.updateHPText(textHP1);
-
-                    alertTextShowing = true;
-                    alertText.setString(alertString);
-                    gameState = 1;
-                }
+            mouseAction(window, v2buttons, voievod2, voievod1, textHP1);
         }
     }
+
+
 
     void event_polling(sf::RenderWindow &window) {
         sf::Event ev{};
@@ -407,40 +405,6 @@ public:
             std::cout << "Voievod 2 - winner!\n";
         else std::cout <<"It's a tie!\n";
     }
-
-    /*
-
-     ///
-     ///    OLD CONSOLE IMPLEMENTATION
-     ///
-
-    void play(){
-        std::cout << "The game has started! \n";
-        std::cout << "Voievod 1: " << voievod1 << "\n" << "Voievod 2: " <<  voievod2 << "\n";
-
-        while(voievod1.isAlive() && voievod2.isAlive()){
-
-            std::cout << "Voievod1, choose your spell:\n";
-            voievod1.printSpells();
-            int *spellIndex_ = new int;
-            std::cin >> *spellIndex_;
-            // aici ar trebui un if in care sa se citeasca frumos spellIndex, fara erori
-            voievod1.useSpell(*spellIndex_-1, voievod2,);
-            std::cout << "It worked! " << voievod2;
-
-            std::cout << "Voievod2, choose your spell:\n";
-            voievod2.printSpells();
-            std::cin >> *spellIndex_;
-            // alt if frumos, posibil o functie
-            voievod2.useSpell(*spellIndex_-1, voievod1);
-            std::cout << "It worked! " << voievod1;
-
-            delete spellIndex_;
-
-        }
-
-    };
-     */
 };
 
 
@@ -458,11 +422,15 @@ int main() {
 
     */
 
-
+    std::string specialAttackText = "Battle of Călugăreni";
+    sf::String sfTmp = sf::String::fromUtf8(specialAttackText.begin(), specialAttackText.end());
     Spell basicAttack = Spell("Basic Attack", 5, 30, 85);
     Spell powerfulAttack = Spell("Powerful Attack",10, 20, 60);
-    Spell voievod1specificAttack = Spell("Battle of Calugareni", 15, 20, 25);
-    Spell voievod2specificAttack = Spell("Night Attack at Targoviste", 15, 20, 25);
+    Spell voievod1specificAttack = Spell(sfTmp, 15, 20, 25);
+
+    specialAttackText = "Battle of Târgoviște";
+    sfTmp = sf::String::fromUtf8(specialAttackText.begin(), specialAttackText.end());
+    Spell voievod2specificAttack = Spell(sfTmp, 15, 20, 25);
     Spell voievod3specificAttack = Spell("Vaslui Battle", 15, 20, 25);
     Spell voievod4specificAttack = Spell("Rovine Battle", 15, 20, 25);
 
