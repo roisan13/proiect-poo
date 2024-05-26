@@ -129,6 +129,29 @@ add_executable(${PROJECT_NAME}
     main.cpp
     generated/src/Helper.cpp
     env_fixes.h
+        Button.cpp
+        Button.h
+        Spell.cpp
+        Spell.h
+        Voievod.cpp
+        Voievod.h
+        Game.cpp
+        Game.h
+        Menu.cpp
+        Menu.h
+        Minion.cpp
+        Minion.h
+        pveGame.cpp
+        pveGame.h
+        pveVoievod.cpp
+        pveVoievod.h
+        MinionDmg.cpp
+        MinionDmg.h
+        Exceptions.h
+        MinionHeal.cpp
+        MinionHeal.h
+        MinionDmgAll.cpp
+        MinionDmgAll.h
 )
 
 ###############################################################################
