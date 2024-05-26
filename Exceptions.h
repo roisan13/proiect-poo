@@ -14,7 +14,7 @@ class gameError : public std::runtime_error {
 class attributeError : public gameError {
 public:
     explicit attributeError(const std::string &where) :
-            gameError("Incorrect/invalid attribute given as parameter in constructor" + where) {}
+            gameError(std::string("Incorrect/invalid attribute given as parameter in constructor") + where) {}
 };
 
 class gameLogicError : public gameError {
