@@ -8,9 +8,10 @@ Minion *MinionDmg::clone() const {
     return new MinionDmg(*this);
 }
 
-void MinionDmg::onDeathSpell(std::vector<Minion *> allyUnits, std::vector<Minion *> enemyUnits) {
+void MinionDmg::onDeathSpell(std::vector<Minion *> &allyUnits, std::vector<Minion *> &enemyUnits) {
     for (auto &enemyUnit: enemyUnits)
         enemyUnit->loseHealth(damageOnDeath);
+    (void) allyUnits;
 }
 
 MinionDmg::MinionDmg(int hp, sf::Font &font, const std::string &textureString, sf::Vector2f size,

@@ -53,7 +53,7 @@ private:
 
     void checkButtonHover(sf::RenderWindow &window);
 
-    static void refreshMinionAttack(std::vector<Minion *> &units);
+    static void refreshMinionAttack(const std::vector<Minion *> &units);
 
     void changeTurn();
 
@@ -69,7 +69,7 @@ public:
 
     ~pveGame() = default;
 
-    pveVoievod *checkUnitClick(std::vector<Minion *> &units, sf::RenderWindow &window);
+    pveVoievod *checkUnitClick(const std::vector<Minion *> &units, sf::RenderWindow &window);
 
     void checkForAliveResize(std::vector<Minion *> &units, bool isOtoman);
 

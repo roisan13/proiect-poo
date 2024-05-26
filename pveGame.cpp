@@ -47,7 +47,7 @@ void pveGame::init_minions() {
     auto pasa2 = MinionDmg(13, fontAr, "sprites/pasa2.png", iconSize, "sprites/pasa2Attacker.png", 3, 2);
     auto pasa3 = MinionDmg(9, fontAr, "sprites/pasa3.png", iconSize, "sprites/pasa3Attacker.png", 4, 2);
     auto pasa4 = MinionDmg(11, fontAr, "sprites/pasa4.png", iconSize, "sprites/pasa4Attacker.png", 3, 2);
-    auto pasa5 = MinionDmg(9, fontAr, "sprites/pasa5.png", iconSize, "sprites/pasa5Attacker.png", 4, 2);
+    // auto pasa5 = MinionDmg(9, fontAr, "sprites/pasa5.png", iconSize, "sprites/pasa5Attacker.png", 4, 2);
 
     otomanMinions.push_back(pasa1.clone());
     otomanMinions.push_back(pasa2.clone());
@@ -116,7 +116,7 @@ void pveGame::checkButtonHover(sf::RenderWindow &window) {
     }
 }
 
-void pveGame::refreshMinionAttack(std::vector<Minion *> &units) {
+void pveGame::refreshMinionAttack(const std::vector<Minion *> &units) {
     for (auto unit: units)
         unit->refreshAttack();
 }
@@ -169,7 +169,7 @@ pveVoievod *pveGame::computer_chooseTarget() {
     else return &voievod;
 }
 
-pveVoievod *pveGame::checkUnitClick(std::vector<Minion *> &units, sf::RenderWindow &window) {
+pveVoievod *pveGame::checkUnitClick(const std::vector<Minion *> &units, sf::RenderWindow &window) {
     for (auto unit: units) {
         if (unit->isHovered(window))
             return unit;

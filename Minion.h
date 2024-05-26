@@ -27,7 +27,7 @@ public:
     Minion(int hp, sf::Font &font, const std::string &textureString, sf::Vector2f size,
            const std::string &attackerTxtrString, int attackDamage_);
 
-    virtual void onDeathSpell(std::vector<Minion *> allyUnits, std::vector<Minion *> enemyUnits) = 0;
+    virtual void onDeathSpell(std::vector<Minion *> &allyUnits, std::vector<Minion *> &enemyUnits) = 0;
 
     virtual Minion *clone() const = 0;
 

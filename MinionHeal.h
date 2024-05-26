@@ -18,7 +18,7 @@ public:
 
     Minion *clone() const override;
 
-    void onDeathSpell(std::vector<Minion *> allyUnits, std::vector<Minion *> enemyUnits) override;
+    void onDeathSpell(std::vector<Minion *> &allyUnits, std::vector<Minion *> &enemyUnits) override;
 };
 
 

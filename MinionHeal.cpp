@@ -15,7 +15,8 @@ Minion *MinionHeal::clone() const {
     return new MinionHeal(*this);
 }
 
-void MinionHeal::onDeathSpell(std::vector<Minion *> allyUnits, std::vector<Minion *> enemyUnits) {
+void MinionHeal::onDeathSpell(std::vector<Minion *> &allyUnits, std::vector<Minion *> &enemyUnits) {
     for (auto &enemyUnit: enemyUnits)
         enemyUnit->gainHealth(healOnDeath);
+    (void) allyUnits;
 }

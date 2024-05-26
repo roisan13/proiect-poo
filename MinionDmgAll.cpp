@@ -8,7 +8,7 @@ MinionDmgAll::MinionDmgAll(int hp, sf::Font &font, const std::string &textureStr
                            const std::string &attackerTxtrString, int attackDamage_, int damageOnDeath_) :
         Minion(hp, font, textureString, size, attackerTxtrString, attackDamage_), damageOnDeath(damageOnDeath_) {}
 
-void MinionDmgAll::onDeathSpell(std::vector<Minion *> allyUnits, std::vector<Minion *> enemyUnits) {
+void MinionDmgAll::onDeathSpell(std::vector<Minion *> &allyUnits, std::vector<Minion *> &enemyUnits) {
     for (auto &enemyUnit: enemyUnits)
         enemyUnit->loseHealth(damageOnDeath);
 
