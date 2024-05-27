@@ -35,7 +35,7 @@ void pveGame::init_minions() {
 
     auto raduBuzescu = MinionDmgAll(10, fontAr, "sprites/radu.png", iconSize, "sprites/raduAttacker.png", 2, 3);
     auto popa = MinionHeal(13, fontAr, "sprites/popa.png", iconSize, "sprites/popaAttacker.png", 2, 3);
-    auto predaBuzescu = MinionDmg(11, fontAr, "sprites/preda.png", iconSize, "sprites/predaAttacker.png", 3, 3);
+    auto predaBuzescu = MinionDmgHeal(11, fontAr, "sprites/preda.png", iconSize, "sprites/predaAttacker.png", 3, 3, 3);
     auto stroeBuzescu = MinionDmg(8, fontAr, "sprites/stroe.png", iconSize, "sprites/stroeAttacker.png", 2, 1);
 
     voievodMinions.push_back(raduBuzescu.clone());

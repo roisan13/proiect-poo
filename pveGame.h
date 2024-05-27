@@ -14,6 +14,7 @@
 #include "MinionDmg.h"
 #include "MinionHeal.h"
 #include "MinionDmgAll.h"
+#include "MinionDmgHeal.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 
