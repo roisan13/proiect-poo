@@ -188,6 +188,9 @@ void pveGame::checkForAliveResize(std::vector<Minion *> &units, bool isOtoman) {
     bool hasErased = false;
     for (auto unit = units.begin(); unit != units.end(); ++unit) {
         if (!(*unit)->isAlive()) {
+            if (isOtoman)
+                (*unit)->onDeathSpell(otomanMinions, voievodMinions);
+            else (*unit)->onDeathSpell(voievodMinions, otomanMinions);
             hasErased = true;
             units.erase(unit);
             break;
@@ -237,8 +240,6 @@ void pveGame::findTargetAndAttack(pveVoievod *selected) {
             target->restoreOriginalSize();
             showOverlayOver(target);
         }
-        if (!target->isAlive())
-            target->onDeathSpell(otomanMinions, voievodMinions);
 
     }
     if (auto target = selected) {
