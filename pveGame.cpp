@@ -121,6 +121,7 @@ void pveGame::refreshMinionAttack(const std::vector<Minion *> &units) {
         unit->refreshAttack();
 }
 
+
 void pveGame::changeTurn() {
     if (isPlayerTurn) {
         endTurnButton.setBackColor(sf::Color(46, 46, 46));
@@ -192,6 +193,7 @@ void pveGame::checkForAliveResize(std::vector<Minion *> &units, bool isOtoman) {
                 (*unit)->onDeathSpell(otomanMinions, voievodMinions);
             else (*unit)->onDeathSpell(voievodMinions, otomanMinions);
             hasErased = true;
+            delete *unit;
             units.erase(unit);
             break;
         }
@@ -426,6 +428,7 @@ void pveGame::play() {
 
     }
     window.close();
+    deleteClones();
     if (voievod.isAlive() == !otoman.isAlive())
         gameOver();
 }
