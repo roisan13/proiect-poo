@@ -1,6 +1,5 @@
 # Lupta Voievozilor
-Un simplu joc turn-based cu voievozi si domnitori precum Mihai Viteazul, Vlad Tepes sau Stefan cel Mare. Ideea de la care am plecat era sa realizez o replica la Hearthstone, dar mult mai simplu. Urmeaza de implementat (pentru tema3, hopefully) un sistem de PvP (cel actual) si PvE (joaca impotriva computer-ului), precum si optiunea de a alege Voievodul cu care vrei sa joci.
-
+Un simplu joc turn-based cu voievozi si domnitori precum Mihai Viteazul, Vlad Tepes sau Stefan cel Mare. Ideea de la care am plecat era sa realizez o replica la Hearthstone, dar mult mai simplu. In modul de joc Play Against Computer poti retrai Batalia de la Calugareni, asa cum a fost surprinsa in filmul lui Sergiu Nicolaescu. 
 ### Important!
 Aveți voie cu cod generat de modele de limbaj la care nu ați contribuit semnificativ doar în folder-ul `generated`.
 Codul generat pus "ca să fie"/pe care nu îl înțelegeți se punctează doar pentru puncte bonus, doar în contextul
