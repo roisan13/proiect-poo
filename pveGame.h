@@ -15,12 +15,15 @@
 #include "MinionHeal.h"
 #include "MinionDmgAll.h"
 #include "MinionDmgHeal.h"
+#include <queue>
+#include <algorithm>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 
 class pveGame {
 private:
-    sf::Texture bgTexture, voievodTexture, otomanTexture, babanovacTexture, hasanpasaTexture;
+    sf::Texture bgTexture;
+    sf::Texture voievodTexture, otomanTexture;
     sf::Sprite bgSprite;
     sf::RectangleShape targetOverlay;
     sf::Vector2f iconSize = {200.f, 200.f};
@@ -30,10 +33,15 @@ private:
     pveVoievod voievod, otoman;
     std::vector<Minion *> voievodMinions, otomanMinions;
     Minion *attacker = nullptr;
+    std::queue<Minion *> dyingMinions;
+    Minion *deadMinion = nullptr;
 
 
     float yPosOtomanUnit = 0.f, yPosVoievodUnit = 0.f;
-    bool isPlayerTurn = true, isAnimationPlaying = false, animationPlayedOnce = false;
+    bool isPlayerTurn = true;
+    bool isDmgAnimationPlaying = false;
+    bool animationDmgPlayedOnce = false;
+    bool isDeathAnimationPlaying = false;
     int clrAlpha = 255;
 
 private:
@@ -72,8 +80,6 @@ public:
 
     pveVoievod *checkUnitClick(const std::vector<Minion *> &units, sf::RenderWindow &window);
 
-    void checkForAliveResize(std::vector<Minion *> &units, bool isOtoman);
-
     void checkHovers(sf::RenderWindow &window);
 
     void checkMouseClick(sf::RenderWindow &window);
@@ -88,6 +94,12 @@ public:
 
     void computer_event_polling();
 
+    void addToDeathChain();
+
+    void removeFromDeathChainAndDelete();
+
+    void nextInDeathChain();
+
     void drawMinions(sf::RenderWindow &window);
 
     void render(sf::RenderWindow &window);
@@ -97,6 +109,7 @@ public:
     void gameOver();
 
     void play();
+
 };
 
 

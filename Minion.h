@@ -15,11 +15,12 @@ class Minion : public pveVoievod {
 private:
     int attackDamage;
     bool hasAttacked = false;
+
+
     sf::Text adText;
 
 protected:
     Minion(const Minion &other) = default;
-
     Minion &operator=(const Minion &other) = default;
 
 public:
@@ -42,6 +43,8 @@ public:
     void refreshAttack();
 
     bool hasAttackedEnemy() const;
+
+
 };
 
 

@@ -20,7 +20,7 @@ public:
 class gameLogicError : public gameError {
 public:
     explicit gameLogicError() :
-            gameError("Invalid game logic regarding player/computer turns.") {}
+            gameError("Invalid game logic regarding player/computer turns or selecting target/attacker.") {}
 };
 
 class grahicsError : public gameError {

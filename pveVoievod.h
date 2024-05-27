@@ -18,6 +18,7 @@ private:
     bool isIncreased = false;
     sf::Texture voievodTexture, attackerTexture;
 protected:
+    bool markedForRemoval = false;
     int healthPoints = 0;
     sf::RectangleShape icon;
     sf::Text hpText;
@@ -47,32 +48,17 @@ public:
 
     void increaseSize();
 
-    void highlightAsAttacker() {
-        icon.setTexture(&attackerTexture);
-    }
+    void highlightAsAttacker();
 
-    void un_highlight() {
-        icon.setTexture(&voievodTexture);
-    }
+    void un_highlight();
 
-    void restoreOriginalSize() {
-        if (isIncreased) {
-            icon.setPosition({icon.getPosition().x + sizeIncrease / 2, icon.getPosition().y + sizeIncrease / 2});
-            icon.setSize(size);
-            isIncreased = false;
-        }
-    }
+    void restoreOriginalSize();
 
-    virtual sf::RectangleShape getTargetOverlay() {
-        sf::RectangleShape targetOverlay;
+    virtual sf::RectangleShape getTargetOverlay();
 
-        targetOverlay.setPosition(icon.getPosition());
+    void markForRemoval();
 
-        targetOverlay.setSize(icon.getSize());
-
-
-        return targetOverlay;
-    }
+    bool hasBeenMarked() const;
 
 };
 

@@ -32,9 +32,8 @@ void pveGame::init_buttons() {
 
 void pveGame::init_minions() {
 
-
     auto raduBuzescu = MinionDmgAll(10, fontAr, "sprites/radu.png", iconSize, "sprites/raduAttacker.png", 2, 3);
-    auto popa = MinionHeal(13, fontAr, "sprites/popa.png", iconSize, "sprites/popaAttacker.png", 2, 3);
+    auto popa = MinionHeal(15, fontAr, "sprites/popa.png", iconSize, "sprites/popaAttacker.png", 2, 3);
     auto predaBuzescu = MinionDmgHeal(11, fontAr, "sprites/preda.png", iconSize, "sprites/predaAttacker.png", 3, 3, 3);
     auto stroeBuzescu = MinionDmg(8, fontAr, "sprites/stroe.png", iconSize, "sprites/stroeAttacker.png", 2, 1);
 
@@ -43,8 +42,8 @@ void pveGame::init_minions() {
     voievodMinions.push_back(predaBuzescu.clone());
     voievodMinions.push_back(stroeBuzescu.clone());
 
-    auto pasa1 = MinionDmg(11, fontAr, "sprites/pasa1.png", iconSize, "sprites/pasa1Attacker.png", 2, 2);
-    auto pasa2 = MinionDmg(13, fontAr, "sprites/pasa2.png", iconSize, "sprites/pasa2Attacker.png", 3, 2);
+    auto pasa1 = MinionDmg(10, fontAr, "sprites/pasa1.png", iconSize, "sprites/pasa1Attacker.png", 2, 2);
+    auto pasa2 = MinionDmg(11, fontAr, "sprites/pasa2.png", iconSize, "sprites/pasa2Attacker.png", 2, 2);
     auto pasa3 = MinionDmg(9, fontAr, "sprites/pasa3.png", iconSize, "sprites/pasa3Attacker.png", 4, 2);
     auto pasa4 = MinionDmg(11, fontAr, "sprites/pasa4.png", iconSize, "sprites/pasa4Attacker.png", 3, 2);
     // auto pasa5 = MinionDmg(9, fontAr, "sprites/pasa5.png", iconSize, "sprites/pasa5Attacker.png", 4, 2);
@@ -121,7 +120,6 @@ void pveGame::refreshMinionAttack(const std::vector<Minion *> &units) {
         unit->refreshAttack();
 }
 
-
 void pveGame::changeTurn() {
     if (isPlayerTurn) {
         endTurnButton.setBackColor(sf::Color(46, 46, 46));
@@ -183,29 +181,8 @@ pveVoievod *pveGame::checkUnitClick(const std::vector<Minion *> &units, sf::Rend
     return nullptr;
 }
 
-void pveGame::checkForAliveResize(std::vector<Minion *> &units, bool isOtoman) {
-    // isOtoman = false   < == >   se sterge (a murit) un minion OTOMAN
-
-    bool hasErased = false;
-    for (auto unit = units.begin(); unit != units.end(); ++unit) {
-        if (!(*unit)->isAlive()) {
-            if (isOtoman)
-                (*unit)->onDeathSpell(otomanMinions, voievodMinions);
-            else (*unit)->onDeathSpell(voievodMinions, otomanMinions);
-            hasErased = true;
-            delete *unit;
-            units.erase(unit);
-            break;
-        }
-    }
-
-    if (hasErased) {
-        setUnitsPos(units, isOtoman);
-    }
-}
-
 void pveGame::checkHovers(sf::RenderWindow &window) {
-    if (!isAnimationPlaying) {
+    if (!isDmgAnimationPlaying) {
         checkUnitHovers(voievodMinions, window);
         checkUnitHovers(otomanMinions, window);   // Hover over enemies to select target
 
@@ -216,7 +193,7 @@ void pveGame::checkHovers(sf::RenderWindow &window) {
 }
 
 void pveGame::checkMouseClick(sf::RenderWindow &window) {
-    if (!isAnimationPlaying) {
+    if (!isDmgAnimationPlaying && !isDeathAnimationPlaying) {
         checkButtonClick(window);
         checkMouseClickForAttack(window);
     }
@@ -226,7 +203,7 @@ void pveGame::showOverlayOver(pveVoievod *target) {
     targetOverlay = target->getTargetOverlay();
     if (targetOverlay.getPosition() == sf::Vector2f({0, 0}))
         throw grahicsError();
-    isAnimationPlaying = true;
+    isDmgAnimationPlaying = true;
     clrAlpha = 255;
 }
 
@@ -237,7 +214,6 @@ void pveGame::findTargetAndAttack(pveVoievod *selected) {
 
         if (!target->isAlive())
             throw gameLogicError();
-
         if (attacker->attackEnemy(target)) {
             target->restoreOriginalSize();
             showOverlayOver(target);
@@ -262,6 +238,10 @@ void pveGame::findTargetAndAttack(pveVoievod *selected) {
 
 void pveGame::checkMouseClickForAttack(sf::RenderWindow &window) {
     if (attacker == nullptr) {
+        // checkUnitClick este folosit pentru selectare si pt minionul care ataca, dar si pt
+        // minionul/pveVoievodul care este atacat
+        // de aceea checkUnitClick returneaza pointer la clasa de baza pveVoievod
+        // si aici trebuie sa fac un dynamic_cast
         attacker = dynamic_cast<Minion *>(checkUnitClick(voievodMinions, window));
         if (attacker) {
             std::cout << "Attacker HAS BEEN SELECTED!\n";
@@ -302,7 +282,7 @@ void pveGame::event_polling(sf::RenderWindow &window) {
 
 void pveGame::computer_event_polling() {
 
-    if (!(isPlayerTurn || isAnimationPlaying)) {
+    if (!(isPlayerTurn || isDmgAnimationPlaying || isDeathAnimationPlaying)) {
         if (attacker == nullptr) {
             attacker = computer_chooseAttacker();
             if (attacker) {
@@ -347,24 +327,40 @@ void pveGame::render(sf::RenderWindow &window) {
 
 void pveGame::animate() {
 
-    if (isAnimationPlaying) {
+    if (isDmgAnimationPlaying) {
         targetOverlay.setFillColor(sf::Color(255, 0, 0, clrAlpha));
         clrAlpha -= 7;
-        if (clrAlpha < 0 && !animationPlayedOnce) {
+        if (clrAlpha < 0 && !animationDmgPlayedOnce) {
             clrAlpha = 255;
-            animationPlayedOnce = true;
-        } else if (clrAlpha < 0 && animationPlayedOnce) {
+            animationDmgPlayedOnce = true;
+        } else if (clrAlpha < 0 && animationDmgPlayedOnce) {
             clrAlpha = 0;
-            animationPlayedOnce = false;
-            isAnimationPlaying = false;
+            animationDmgPlayedOnce = false;
+            isDmgAnimationPlaying = false;
 
             if (!isPlayerTurn) {
                 attacker->un_highlight();
                 attacker = nullptr;
             }
 
-            checkForAliveResize(voievodMinions, false);
-            checkForAliveResize(otomanMinions, true);
+            addToDeathChain();
+            std::cout << dyingMinions.size() << " ";
+            if (!dyingMinions.empty()) {
+                isDeathAnimationPlaying = true;
+                nextInDeathChain();
+            }
+        }
+    } else if (isDeathAnimationPlaying) {
+        targetOverlay.setFillColor(sf::Color(255, 255, 255, clrAlpha));
+        clrAlpha -= 5;
+        if (clrAlpha <= 0) {
+            if (dyingMinions.empty()) {
+                isDeathAnimationPlaying = false;
+                removeFromDeathChainAndDelete();
+            } else {
+                removeFromDeathChainAndDelete();
+                nextInDeathChain();
+            }
         }
     }
 }
@@ -375,9 +371,12 @@ void pveGame::gameOver() {
     window.setVerticalSyncEnabled(true);
     sf::Sprite bg;
     sf::Texture bgtxt;
-    if (voievod.isAlive())
+    if (voievodMinions.empty() && otomanMinions.empty())
+        bgtxt.loadFromFile("sprites/gameTie.png");
+    else if (voievod.isAlive() && !otoman.isAlive())
         bgtxt.loadFromFile("sprites/gameWon.png");
-    else bgtxt.loadFromFile("sprites/gameLost.png");
+    else if (!voievod.isAlive() && otoman.isAlive())
+        bgtxt.loadFromFile("sprites/gameLost.png");
 
     bg.setTexture(bgtxt);
     bg.setPosition({0, 0});
@@ -410,7 +409,8 @@ void pveGame::play() {
     init_minions();
     init_buttons();
 
-    while (window.isOpen() && voievod.isAlive() && otoman.isAlive()) {
+    while (window.isOpen() && voievod.isAlive() && otoman.isAlive() &&
+           !(voievodMinions.empty() && otomanMinions.empty())) {
         // Get PLAYER input
         event_polling(window);
 
@@ -428,7 +428,7 @@ void pveGame::play() {
 
     }
     window.close();
-    if (voievod.isAlive() == !otoman.isAlive())
+    if (voievod.isAlive() == !otoman.isAlive() || (voievodMinions.empty() && voievodMinions.empty()))
         gameOver();
 }
 
@@ -438,4 +438,46 @@ pveGame::~pveGame() {
 
     for (auto &voievodMinion: voievodMinions)
         delete voievodMinion;
+}
+
+void pveGame::addToDeathChain() {
+    for (auto unit: voievodMinions) {
+        if (!unit->isAlive() && !unit->hasBeenMarked()) {
+            dyingMinions.push(unit);
+            unit->markForRemoval();
+        }
+    }
+
+    for (auto unit: otomanMinions) {
+        if (!unit->isAlive() && !unit->hasBeenMarked()) {
+            dyingMinions.push(unit);
+            unit->markForRemoval();
+        }
+    }
+}
+
+void pveGame::removeFromDeathChainAndDelete() {
+    if (std::find(voievodMinions.begin(), voievodMinions.end(), deadMinion) != voievodMinions.end())
+        voievodMinions.erase(std::find(voievodMinions.begin(), voievodMinions.end(), deadMinion));
+    else if (std::find(otomanMinions.begin(), otomanMinions.end(), deadMinion) != otomanMinions.end())
+        otomanMinions.erase(std::find(otomanMinions.begin(), otomanMinions.end(), deadMinion));
+
+
+    setUnitsPos(otomanMinions, true);
+    setUnitsPos(voievodMinions, false);
+
+    delete deadMinion;
+}
+
+void pveGame::nextInDeathChain() {
+    deadMinion = dyingMinions.front();
+    targetOverlay = deadMinion->getTargetOverlay();
+    clrAlpha = 255;
+    if (std::find(voievodMinions.begin(), voievodMinions.end(), deadMinion) != voievodMinions.end()) {
+        deadMinion->onDeathSpell(voievodMinions, otomanMinions);
+    } else {
+        deadMinion->onDeathSpell(otomanMinions, voievodMinions);
+    }
+    addToDeathChain();
+    dyingMinions.pop();
 }

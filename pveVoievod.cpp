@@ -51,14 +51,16 @@ void pveVoievod::setPosition(sf::Vector2f pos) {
 }
 
 void pveVoievod::loseHealth(int damageDealt) {
-    healthPoints -= damageDealt;
+    if (!markedForRemoval)
+        healthPoints -= damageDealt;
 
     // Update HP text
     hpText.setString(std::to_string(healthPoints));
 }
 
 void pveVoievod::gainHealth(int healthGained) {
-    healthPoints += healthGained;
+    if (!markedForRemoval)
+        healthPoints += healthGained;
 
     // Update HP text
     hpText.setString(std::to_string(healthPoints));
@@ -91,4 +93,39 @@ void pveVoievod::increaseSize() {
         icon.setPosition({icon.getPosition().x - sizeIncrease / 2, icon.getPosition().y - sizeIncrease / 2});
         isIncreased = true;
     }
+}
+
+void pveVoievod::highlightAsAttacker() {
+    icon.setTexture(&attackerTexture);
+}
+
+void pveVoievod::un_highlight() {
+    icon.setTexture(&voievodTexture);
+}
+
+void pveVoievod::restoreOriginalSize() {
+    if (isIncreased) {
+        icon.setPosition({icon.getPosition().x + sizeIncrease / 2, icon.getPosition().y + sizeIncrease / 2});
+        icon.setSize(size);
+        isIncreased = false;
+    }
+}
+
+sf::RectangleShape pveVoievod::getTargetOverlay() {
+    sf::RectangleShape targetOverlay;
+
+    targetOverlay.setPosition(icon.getPosition());
+
+    targetOverlay.setSize(icon.getSize());
+
+
+    return targetOverlay;
+}
+
+void pveVoievod::markForRemoval() {
+    markedForRemoval = true;
+}
+
+bool pveVoievod::hasBeenMarked() const {
+    return markedForRemoval;
 }
