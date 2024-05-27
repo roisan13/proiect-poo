@@ -428,7 +428,7 @@ void pveGame::play() {
 
     }
     window.close();
-    if (voievod.isAlive() == !otoman.isAlive() || (voievodMinions.empty() && voievodMinions.empty()))
+    if (voievod.isAlive() == !otoman.isAlive() || (voievodMinions.empty() && otomanMinions.empty()))
         gameOver();
 }
 
