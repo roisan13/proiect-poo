@@ -428,7 +428,14 @@ void pveGame::play() {
 
     }
     window.close();
-    deleteClones();
     if (voievod.isAlive() == !otoman.isAlive())
         gameOver();
+}
+
+pveGame::~pveGame() {
+    for (auto &otomanMinion: otomanMinions)
+        delete otomanMinion;
+
+    for (auto &voievodMinion: voievodMinions)
+        delete voievodMinion;
 }

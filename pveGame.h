@@ -64,19 +64,11 @@ private:
 
     pveVoievod *computer_chooseTarget();
 
-    void deleteClones() {
-        for (auto &otomanMinion: otomanMinions)
-            delete otomanMinion;
-
-        for (auto &voievodMinion: voievodMinions)
-            delete voievodMinion;
-    }
-
 
 public:
     pveGame() = default;
 
-    ~pveGame() = default;
+    ~pveGame();
 
     pveVoievod *checkUnitClick(const std::vector<Minion *> &units, sf::RenderWindow &window);
 
