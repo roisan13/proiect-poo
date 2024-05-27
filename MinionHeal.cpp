@@ -8,7 +8,7 @@ MinionHeal::MinionHeal(int hp, sf::Font &font, const std::string &textureString,
                        const std::string &attackerTxtrString, int attackDamage_, int healOnDeath_) :
         Minion(hp, font, textureString, size, attackerTxtrString, attackDamage_), healOnDeath(healOnDeath_) {
     if (healOnDeath_ < 0)
-        throw attributeError("MinionHeal");
+        throw attributeError();
 }
 
 Minion *MinionHeal::clone() const {

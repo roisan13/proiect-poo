@@ -20,9 +20,9 @@ pveVoievod::pveVoievod(int hp, sf::Font &font, const std::string &textureString,
 
 
     if (!voievodTexture.loadFromFile(textureString))
-        throw attributeError("pveVoievod");
+        throw attributeError();
     if (!attackerTexture.loadFromFile(attackerTxtrString))
-        throw attributeError("pveVoievod");
+        throw attributeError();
 }
 
 pveVoievod::pveVoievod(int hp, sf::Font &font, const sf::Texture &texture, sf::Vector2f size_) {
