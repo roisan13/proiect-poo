@@ -9,6 +9,7 @@
 #include "pveGame.h"
 #include "Exceptions.h"
 #include "Game.h"
+#include "SingletonGame.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 
@@ -21,10 +22,11 @@ private:
 
     void initMenuComponents();
 
-public:
     Menu() = default;
 
-    ~Menu() = default;
+public:
+
+    static Menu &getMenu();
 
     void checkMouseButtonPressed(sf::RenderWindow &window);
 

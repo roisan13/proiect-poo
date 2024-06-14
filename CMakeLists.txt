@@ -154,6 +154,12 @@ add_executable(${PROJECT_NAME}
         MinionDmgAll.h
         MinionDmgHeal.cpp
         MinionDmgHeal.h
+        Minion_Factory.cpp
+        Minion_Factory.h
+        Minion_Builder.cpp
+        Minion_Builder.h
+        SingletonGame.cpp
+        SingletonGame.h
 )
 
 ###############################################################################

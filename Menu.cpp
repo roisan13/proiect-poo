@@ -20,21 +20,7 @@ void Menu::initMenuComponents() {
 void Menu::checkMouseButtonPressed(sf::RenderWindow &window) {
     if (playerButton.isHovered(window)) {
 
-        std::string specialAttackText = "Battle of Călugăreni";
-        sf::String sfTmp = sf::String::fromUtf8(specialAttackText.begin(), specialAttackText.end());
-        Spell basicAttack = Spell("Basic Attack", 5, 30, 85);
-        Spell powerfulAttack = Spell("Powerful Attack", 10, 20, 60);
-        Spell voievod1specificAttack = Spell(sfTmp, 15, 20, 25);
-
-        specialAttackText = "Battle of Târgoviște";
-        sfTmp = sf::String::fromUtf8(specialAttackText.begin(), specialAttackText.end());
-        Spell voievod2specificAttack = Spell(sfTmp, 15, 20, 25);
-
-
-        Voievod v1 = Voievod("Michael The Brave", 89, 30, {basicAttack, powerfulAttack, voievod1specificAttack});
-        Voievod v2 = Voievod("Vlad The Impaler", 93, 30, {basicAttack, powerfulAttack, voievod2specificAttack});
-
-        Game game = Game(v1, v2);
+        auto game = SingletonGame<Game>::getGameInstance();
         game.play();
 
         window.close();
@@ -43,7 +29,7 @@ void Menu::checkMouseButtonPressed(sf::RenderWindow &window) {
     if (computerButton.isHovered(window)) {
 
         try {
-            pveGame game = pveGame();
+            auto game = SingletonGame<pveGame>::getGameInstance();
             game.play();
         }
         catch (attributeError &err) {
@@ -123,4 +109,9 @@ void Menu::displayMenu() {
         window.display();
     }
 
+}
+
+Menu &Menu::getMenu() {
+    static Menu menu;
+    return menu;
 }

@@ -15,6 +15,9 @@
 #include "MinionHeal.h"
 #include "MinionDmgAll.h"
 #include "MinionDmgHeal.h"
+#include "Minion_Factory.h"
+#include "Minion_Builder.h"
+#include "random.hpp"
 #include <queue>
 #include <algorithm>
 #include <SFML/Graphics.hpp>
@@ -46,6 +49,8 @@ private:
 
 private:
 
+    pveGame() = default;
+
     void init_voievozi();
 
     void init_sprites();
@@ -72,9 +77,10 @@ private:
 
     pveVoievod *computer_chooseTarget();
 
+    static void getRandomValues(int &hp, int &ad, int &deathDmg);
+
 
 public:
-    pveGame() = default;
 
     ~pveGame();
 
@@ -110,6 +116,8 @@ public:
 
     void play();
 
+    template<typename T> friend
+    class SingletonGame;
 };
 
 

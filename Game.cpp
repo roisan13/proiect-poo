@@ -57,8 +57,6 @@ void Game::init_voievodButtons() {
     v2buttons = {btn1V2, btn2V2, btn3V2};
 }
 
-Game::Game(const Voievod &voievod1, const Voievod &voievod2) : voievod1(voievod1), voievod2(voievod2), gameState(1),
-                                                               clrAlpha(0), alertTextShowing(false) {}
 
 Game::~Game() {
     std::cout << "\n Game destructor \n";
@@ -166,6 +164,7 @@ void Game::play() {
     /// Do NOT burn the GPU.
     window.setVerticalSyncEnabled(true);
 
+    init_voievozi();
     init_sprites();
     init_voievodtextHP();
     init_alertText();
@@ -191,4 +190,20 @@ void Game::play() {
     else if (!voievod1.isAlive() && voievod2.isAlive())
         std::cout << "Voievod 2 - winner!\n";
     else std::cout << "It's a tie!\n";
+}
+
+void Game::init_voievozi() {
+    std::string specialAttackText = "Battle of Călugăreni";
+    sf::String sfTmp = sf::String::fromUtf8(specialAttackText.begin(), specialAttackText.end());
+    Spell basicAttack = Spell("Basic Attack", 5, 30, 85);
+    Spell powerfulAttack = Spell("Powerful Attack", 10, 20, 60);
+    Spell voievod1specificAttack = Spell(sfTmp, 15, 20, 25);
+
+    specialAttackText = "Battle of Târgoviște";
+    sfTmp = sf::String::fromUtf8(specialAttackText.begin(), specialAttackText.end());
+    Spell voievod2specificAttack = Spell(sfTmp, 15, 20, 25);
+
+
+    voievod1 = Voievod("Michael The Brave", 89, 30, {basicAttack, powerfulAttack, voievod1specificAttack});
+    voievod2 = Voievod("Vlad The Impaler", 93, 30, {basicAttack, powerfulAttack, voievod2specificAttack});
 }

@@ -20,7 +20,7 @@ int main() {
     init_threads();                                                       //
     ////////////////////////////////////////////////////////////////////////
 
-    Menu mainMenu = Menu();
+    auto mainMenu = Menu::getMenu();
     mainMenu.displayMenu();
 
     return 0;

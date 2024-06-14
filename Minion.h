@@ -13,17 +13,18 @@
 
 class Minion : public pveVoievod {
 private:
-    int attackDamage;
     bool hasAttacked = false;
 
-
-    sf::Text adText;
-
 protected:
+    sf::Text adText;
+    int attackDamage;
+
     Minion(const Minion &other) = default;
     Minion &operator=(const Minion &other) = default;
 
 public:
+
+    Minion() = default;
 
     Minion(int hp, sf::Font &font, const std::string &textureString, sf::Vector2f size,
            const std::string &attackerTxtrString, int attackDamage_);

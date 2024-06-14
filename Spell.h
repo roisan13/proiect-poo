@@ -14,8 +14,7 @@ class Spell {
 private:
     std::string name;
     int baseDamage;
-    int critChance;
-    int hitChance;
+    int critChance, hitChance;
 
 public:
     Spell(std::string name, int baseDamage, int critChance, int hitChance);
@@ -27,7 +26,6 @@ public:
     virtual ~Spell();
 
     [[nodiscard]] int evalDamage(std::string &alertString) const;
-
 
     friend std::ostream &operator<<(std::ostream &os, const Spell &spell);
 

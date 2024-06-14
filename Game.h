@@ -22,10 +22,14 @@ private:
     sf::Text alertText;
     Button btn1V1, btn2V1, btn3V1, btn1V2, btn2V2, btn3V2;
     std::vector<Button> v1buttons, v2buttons;
-    unsigned int gameState;
-    int clrAlpha;
-    bool alertTextShowing;
+    unsigned int gameState = 1;
+    int clrAlpha = 0;
+    bool alertTextShowing = false;
     std::string alertString;
+
+    Game() = default;
+
+    void init_voievozi();
 
     void init_voievodtextHP();
 
@@ -38,7 +42,6 @@ private:
 
 public:
 
-    Game(const Voievod &voievod1, const Voievod &voievod2);
 
     ~Game();
 
@@ -52,6 +55,9 @@ public:
     void renderGame(sf::RenderWindow &window);
 
     void play();
+
+    template<typename T> friend
+    class SingletonGame;
 };
 
 

@@ -10,18 +10,15 @@
 #include <SFML/Graphics.hpp>
 
 class pveVoievod {
-private:
-
-
+protected:
     sf::Vector2f size, position, increasedSize;
     float sizeIncrease = 10.f;
     bool isIncreased = false;
-    sf::Texture voievodTexture, attackerTexture;
-protected:
     bool markedForRemoval = false;
     int healthPoints = 0;
     sf::RectangleShape icon;
     sf::Text hpText;
+    sf::Texture voievodTexture, attackerTexture;
 
 
 public:

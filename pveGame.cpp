@@ -20,7 +20,6 @@ void pveGame::init_sprites() {
 
     voievodTexture.loadFromFile("sprites/mihai.jpg");
     otomanTexture.loadFromFile("sprites/sinan.jpg");
-
     fontAr.loadFromFile("sprites/arial.ttf");
 }
 
@@ -32,20 +31,41 @@ void pveGame::init_buttons() {
 
 void pveGame::init_minions() {
 
-    auto raduBuzescu = MinionDmgAll(10, fontAr, "sprites/radu.png", iconSize, "sprites/raduAttacker.png", 2, 3);
-    auto popa = MinionHeal(15, fontAr, "sprites/popa.png", iconSize, "sprites/popaAttacker.png", 2, 3);
-    auto predaBuzescu = MinionDmgHeal(11, fontAr, "sprites/preda.png", iconSize, "sprites/predaAttacker.png", 3, 3, 3);
-    auto stroeBuzescu = MinionDmg(8, fontAr, "sprites/stroe.png", iconSize, "sprites/stroeAttacker.png", 2, 1);
+    auto raduBuzescu = Minion_Factory::raduBuzescu(fontAr);
+    auto popa = Minion_Factory::popa(fontAr);
+    auto predaBuzescu = Minion_Factory::predaBuzescu(fontAr);
+    auto stroeBuzescu = Minion_Factory::stroeBuzescu(fontAr);
 
     voievodMinions.push_back(raduBuzescu.clone());
     voievodMinions.push_back(popa.clone());
     voievodMinions.push_back(predaBuzescu.clone());
     voievodMinions.push_back(stroeBuzescu.clone());
 
+    Minion_Builder m;
+
+    int hp, ad, deathDmg;
+
+    getRandomValues(hp, ad, deathDmg);
+    auto pasa1 = m.health(hp).font(fontAr).texture("sprites/pasa1.png").size(iconSize).
+            attackerTexture("sprites/pasa1Attacker.png").attackDamage(ad).damageOnDeath(deathDmg).build();
+
+    getRandomValues(hp, ad, deathDmg);
+    auto pasa2 = m.health(hp).font(fontAr).texture("sprites/pasa2.png").size(iconSize).
+            attackerTexture("sprites/pasa2Attacker.png").attackDamage(ad).damageOnDeath(deathDmg).build();
+
+    getRandomValues(hp, ad, deathDmg);
+    auto pasa3 = m.health(hp).font(fontAr).texture("sprites/pasa3.png").size(iconSize).
+            attackerTexture("sprites/pasa3Attacker.png").attackDamage(ad).damageOnDeath(deathDmg).build();
+
+    getRandomValues(hp, ad, deathDmg);
+    auto pasa4 = m.health(hp).font(fontAr).texture("sprites/pasa4.png").size(iconSize).
+            attackerTexture("sprites/pasa4Attacker.png").attackDamage(ad).damageOnDeath(deathDmg).build();
+    /*
     auto pasa1 = MinionDmg(10, fontAr, "sprites/pasa1.png", iconSize, "sprites/pasa1Attacker.png", 2, 2);
     auto pasa2 = MinionDmg(11, fontAr, "sprites/pasa2.png", iconSize, "sprites/pasa2Attacker.png", 2, 2);
     auto pasa3 = MinionDmg(9, fontAr, "sprites/pasa3.png", iconSize, "sprites/pasa3Attacker.png", 4, 2);
     auto pasa4 = MinionDmg(11, fontAr, "sprites/pasa4.png", iconSize, "sprites/pasa4Attacker.png", 3, 2);
+    */
     // auto pasa5 = MinionDmg(9, fontAr, "sprites/pasa5.png", iconSize, "sprites/pasa5Attacker.png", 4, 2);
 
     otomanMinions.push_back(pasa1.clone());
@@ -480,4 +500,14 @@ void pveGame::nextInDeathChain() {
     }
     addToDeathChain();
     dyingMinions.pop();
+}
+
+void pveGame::getRandomValues(int &hp, int &ad, int &deathDmg) {
+    deathDmg = effolkronium::random_static::get(1, 2);
+    hp = effolkronium::random_static::get(8, 12);
+    ad = 14 - hp + effolkronium::random_static::get(-2, 2);
+    if (ad < 2)
+        ad = 2;
+    else if (ad > 4)
+        ad = 4;
 }

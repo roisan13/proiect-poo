@@ -8,7 +8,6 @@ Spell::Spell(std::string name, int baseDamage, int critChance, int hitChance) : 
                                                                                 baseDamage(baseDamage),
                                                                                 critChance(critChance),
                                                                                 hitChance(hitChance) {}
-
 Spell::Spell(const Spell &other) : name(other.name), baseDamage(other.baseDamage), critChance(other.critChance),
                                    hitChance(other.hitChance) {
     std::cout << "Constr copiere Spell\n";
@@ -23,12 +22,13 @@ Spell &Spell::operator=(const Spell &other) {
     return *this;
 }
 
+
 Spell::~Spell() {
     std::cout << "Spell destroyed";
 }
 
 int Spell::evalDamage(std::string &alertString) const {
-    if (effolkronium::random_static::get(1, 100) > hitChance) {
+    if (effolkronium::random_static::get(0, 100) > hitChance) {
         std::cout << "Miss!";
         alertString = "Miss!";
         return 0;
@@ -49,3 +49,5 @@ std::ostream &operator<<(std::ostream &os, const Spell &spell) {
     os << "name: " << spell.name << " baseDamage: " << spell.baseDamage << " critChance: " << spell.critChance << '\n';
     return os;
 }
+
+

@@ -14,11 +14,13 @@
 class Voievod {
 private:
     std::string name;
-    int strength;
-    int healthPoints;
+    int strength{};
+    int healthPoints{};
     std::vector<Spell> spells;
 
 public:
+    Voievod() = default;
+
     Voievod(std::string name_, int strength_, int healthPoints_, const std::vector<Spell> &spells_);
 
     virtual ~Voievod();
