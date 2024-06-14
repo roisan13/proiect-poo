@@ -38,7 +38,7 @@ void Game::init_voievodButtons() {
     // Buttons for voievod1
     btn1V1 = Button("Basic Attack", fontAr, {400, 50}, sf::Color::Black);
     btn2V1 = Button("Powerful Attack", fontAr, {400, 50}, sf::Color::Black);
-    btn3V1 = Button("Battle of Calugareni", fontAr, {400, 50}, sf::Color::Black);
+    btn3V1 = Button("Battle of Călugăreni", fontAr, {400, 50}, sf::Color::Black);
     btn1V1.setPosition({20.f, 25.f});
     btn2V1.setPosition({20.f, 100.f});
     btn3V1.setPosition({20.f, 175.f});
@@ -48,7 +48,7 @@ void Game::init_voievodButtons() {
     // Buttons for voievod2
     btn1V2 = Button("Basic Attack", fontAr, {400, 50}, sf::Color::Black);
     btn2V2 = Button("Powerful Attack", fontAr, {400, 50}, sf::Color::Black);
-    btn3V2 = Button("Night Attack at Targoviste", fontAr, {400, 50}, sf::Color::Black);
+    btn3V2 = Button("Night Attack at Târgoviște", fontAr, {400, 50}, sf::Color::Black);
 
     // de schimbat numerele astea magice la un moment dat!
     btn1V2.setPosition({20.f, 450.f + 25.f});
@@ -170,7 +170,7 @@ void Game::play() {
     init_alertText();
     init_voievodButtons();
 
-    while (window.isOpen()) {
+    while (window.isOpen() && voievod1.isAlive() && voievod2.isAlive()) {
         event_polling(window);
 
         //Render
@@ -185,11 +185,39 @@ void Game::play() {
 
     }
 
-    if (voievod1.isAlive() && !voievod2.isAlive())
-        std::cout << "Voievod 1 - winner!\n";
-    else if (!voievod1.isAlive() && voievod2.isAlive())
-        std::cout << "Voievod 2 - winner!\n";
-    else std::cout << "It's a tie!\n";
+    displayWinner();
+}
+
+void Game::displayWinner() {
+    sf::RenderWindow window(sf::VideoMode(1280, 900), "Game over");
+
+    window.setVerticalSyncEnabled(true);
+    sf::Sprite bg;
+    sf::Texture bgtxt;
+    if (voievod1.isAlive())
+        bgtxt.loadFromFile("sprites/michaelwins.png");
+    else {
+        bgtxt.loadFromFile("sprites/vladwins.png");
+    }
+
+    bg.setTexture(bgtxt);
+    bg.setPosition({0, 0});
+    while (window.isOpen()) {
+        sf::Event ev{};
+
+        //Event polling
+        while (window.pollEvent(ev)) {
+            switch (ev.type) {
+                case sf::Event::Closed:
+                    window.close();
+                    break;
+                default:
+                    break;
+            }
+        }
+        window.draw(bg);
+        window.display();
+    }
 }
 
 void Game::init_voievozi() {
@@ -197,12 +225,9 @@ void Game::init_voievozi() {
     sf::String sfTmp = sf::String::fromUtf8(specialAttackText.begin(), specialAttackText.end());
     Spell basicAttack = Spell("Basic Attack", 5, 30, 85);
     Spell powerfulAttack = Spell("Powerful Attack", 10, 20, 60);
-    Spell voievod1specificAttack = Spell(sfTmp, 15, 20, 25);
+    Spell voievod1specificAttack = Spell("Battle of Călugăreni", 15, 20, 25);
 
-    specialAttackText = "Battle of Târgoviște";
-    sfTmp = sf::String::fromUtf8(specialAttackText.begin(), specialAttackText.end());
-    Spell voievod2specificAttack = Spell(sfTmp, 15, 20, 25);
-
+    Spell voievod2specificAttack = Spell("Battle of Târgoviște", 15, 20, 25);
 
     voievod1 = Voievod("Michael The Brave", 89, 30, {basicAttack, powerfulAttack, voievod1specificAttack});
     voievod2 = Voievod("Vlad The Impaler", 93, 30, {basicAttack, powerfulAttack, voievod2specificAttack});

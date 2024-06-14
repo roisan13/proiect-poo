@@ -4,12 +4,17 @@
 
 #include "Button.h"
 #include <iostream>
+#include <locale>
+#include <codecvt>
 
 Button::Button(const std::string &t, sf::Font &font, sf::Vector2f size, sf::Color bgColor) {
 
-    text.setString(t);
     text.setCharacterSize(24);
     text.setFont(font);
+
+    std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+    std::wstring wide_string = converter.from_bytes(t);
+    text.setString(wide_string);
 
     button.setSize(size);
     button.setFillColor(bgColor);

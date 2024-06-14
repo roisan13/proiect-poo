@@ -56,6 +56,8 @@ public:
 
     void play();
 
+    void displayWinner();
+
     template<typename T> friend
     class SingletonGame;
 };
