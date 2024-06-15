@@ -20,7 +20,7 @@ void Menu::initMenuComponents() {
 void Menu::checkMouseButtonPressed(sf::RenderWindow &window) {
     if (playerButton.isHovered(window)) {
 
-        auto game = SingletonGame<Game>::getGameInstance();
+        auto &game = Game::getGameInstance();
         game.play();
 
         window.close();
@@ -29,7 +29,7 @@ void Menu::checkMouseButtonPressed(sf::RenderWindow &window) {
     if (computerButton.isHovered(window)) {
 
         try {
-            auto game = SingletonGame<pveGame>::getGameInstance();
+            auto &game = pveGame::getGameInstance();
             game.play();
         }
         catch (attributeError &err) {

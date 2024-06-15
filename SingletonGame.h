@@ -5,33 +5,29 @@
 #ifndef OOP_SINGLETONGAME_H
 #define OOP_SINGLETONGAME_H
 
-#include "pveGame.h"
-#include "Game.h"
-
-template<typename T>
+template<typename Derived>
 class SingletonGame {
-    SingletonGame() {}
-
-    ~SingletonGame() {}
-
+protected:
+    SingletonGame() = default;
 public:
+    static Derived &getGameInstance() {
+        static DerivedGameInstance instance;
+        return instance;
+    }
+
 
     SingletonGame(const SingletonGame &) = delete;
 
     SingletonGame &operator=(const SingletonGame &) = delete;
 
-    static T &getGameInstance() {
-        static T gameInstance;
-        return gameInstance;
-    }
 
+private:
+
+    class DerivedGameInstance : public Derived {
+    public:
+        DerivedGameInstance() : Derived() {}
+    };
 };
-
-template
-class SingletonGame<Game>;
-
-template
-class SingletonGame<pveGame>;
 
 
 #endif //OOP_SINGLETONGAME_H

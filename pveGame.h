@@ -17,13 +17,15 @@
 #include "MinionDmgHeal.h"
 #include "Minion_Factory.h"
 #include "Minion_Builder.h"
+#include "SingletonGame.h"
 #include "random.hpp"
 #include <queue>
 #include <algorithm>
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 
-class pveGame {
+class pveGame : public SingletonGame<pveGame> {
+
 private:
     sf::Texture bgTexture;
     sf::Texture voievodTexture, otomanTexture;
@@ -47,9 +49,6 @@ private:
     bool isDeathAnimationPlaying = false;
     int clrAlpha = 255;
 
-private:
-
-    pveGame() = default;
 
     void init_voievozi();
 
@@ -79,6 +78,8 @@ private:
 
     static void getRandomValues(int &hp, int &ad, int &deathDmg);
 
+protected:
+    pveGame() = default;
 
 public:
 

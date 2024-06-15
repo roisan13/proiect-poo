@@ -7,11 +7,12 @@
 
 #include "Voievod.h"
 #include "Button.h"
+#include "SingletonGame.h"
 #include <SFML/Graphics.hpp>
 #include <SFML/Network.hpp>
 
 
-class Game {
+class Game : public SingletonGame<Game> {
 private:
     Voievod voievod1, voievod2;
 
@@ -27,8 +28,6 @@ private:
     bool alertTextShowing = false;
     std::string alertString;
 
-    Game() = default;
-
     void init_voievozi();
 
     void init_voievodtextHP();
@@ -39,10 +38,10 @@ private:
 
     void init_voievodButtons();
 
+protected:
+    Game() = default;
 
 public:
-
-
     ~Game();
 
     void mouseAction(sf::RenderWindow &window, std::vector<Button> buttons, Voievod &voievod, Voievod &voievodAtacat,
