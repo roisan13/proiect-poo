@@ -1,10 +1,10 @@
 # Lupta Voievozilor
-Un simplu joc turn-based cu voievozi, inspirat din magnum opus-ul lui Sergiu Nicolaescu, __Mihai Viteazul__.
+Un simplu joc turn-based cu voievozi, inspirat din magnum opus-ul lui Sergiu Nicolaescu, Mihai Viteazul.
 ### Modul de joc Player vs Player
 Întrece-te cu prietenii tăi într-un joc al șanselor în modul de joc Player vs Player. Cei doi voievozi, Mihai Viteazul și Vlad Țepeș (atenție, confruntarea dintre acești doi voievozi aparține strict de domeniul imaginației și nu este inspirată din fapte reale!), pot folosi abilități cu diferite șanse de succes și lovitură critică. Cu cât abilitatea este mai puternică, cu atât șansele de a rata sunt mai mari. Dar norocul surâde celor îndrăzneți!
 
 ### Modul de joc Player vs Computer
-Retrăiește Bătălia de la Călugăreni, așa cum a fost ea surprinsă în filmul __Mihai Viteazul__! Testează-ți abilitățile împotriva computer-ului în acest mod de joc turn-based cu minioni, inspirat din Hearthstone. Minionii sunt iconițele din mijlocul ecranului. Pentru atac, selectați un minion aliat și apoi unul inamic. Valoarea daunelor cauzate de un minion este reprezentată de numărul din stanga, iar punctele curente de viață sunt reprezentate de numărul din dreapta. Fiecare minion poate ataca o singură dată, și fiecare minion are o abilitate specială atunci când moare. Minionii otomanului dau intre 1-2 damage atunci când mor, iar toți minionii lui Mihai au abilități diferite la moarte. Descoperă-le jucând și găsește cea mai bună strategie pentru a învinge oastea otomană!
+Retrăiește Bătălia de la Călugăreni, așa cum a fost ea surprinsă în filmul Mihai Viteazul! Testează-ți abilitățile împotriva computer-ului în acest mod de joc turn-based cu minioni, inspirat din Hearthstone. Minionii sunt iconițele din mijlocul ecranului. Pentru atac, selectați un minion aliat și apoi unul inamic. Valoarea daunelor cauzate de un minion este reprezentată de numărul din stanga, iar punctele curente de viață sunt reprezentate de numărul din dreapta. Fiecare minion poate ataca o singură dată, și fiecare minion are o abilitate specială atunci când moare. Minionii otomanului dau intre 1-2 damage atunci când mor, iar toți minionii lui Mihai au abilități diferite la moarte. Descoperă-le jucând și găsește cea mai bună strategie pentru a învinge oastea otomană!
 
 
 ### Important!
